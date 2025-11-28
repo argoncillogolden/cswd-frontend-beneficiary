@@ -36,6 +36,106 @@ export const useBenefeciaryStore = defineStore('products', {
             }
         },
 
+        async checkExistingEmailStore(payload) {
+            this.error = null;
+            try {
+                if (!BENEFECIARY_API || typeof BENEFECIARY_API.checkExistingEmailApi !== 'function') {
+                    throw new Error('BENEFECIARY_API service is not properly initialized');
+                }
+                const response = await BENEFECIARY_API.checkExistingEmailApi(payload);
+                if (response && (response.success === true)) {
+                    return response;
+                } else {
+                    throw new Error('Failed to save benefeciary');
+                }
+            } catch (error) {
+                console.error(error);
+                throw error;
+            } finally {
+                this.error = null;
+            }
+        },
+
+        async sendPincodeStore(payload) {
+            this.error = null;
+            try {
+                if (!BENEFECIARY_API || typeof BENEFECIARY_API.sendPincodeApi !== 'function') {
+                    throw new Error('BENEFECIARY_API service is not properly initialized');
+                }
+                const response = await BENEFECIARY_API.sendPincodeApi(payload);
+                if (response && (response.success === true)) {
+                    return response;
+                } else {
+                    throw new Error('Failed to save benefeciary');
+                }
+            } catch (error) {
+                console.error(error);
+                throw error;
+            } finally {
+                this.error = null;
+            }
+        },
+
+        async saveNewPasswordStore(payload) {
+            this.error = null;
+            try {
+                if (!BENEFECIARY_API || typeof BENEFECIARY_API.saveNewPasswordApi !== 'function') {
+                    throw new Error('BENEFECIARY_API service is not properly initialized');
+                }
+                const response = await BENEFECIARY_API.saveNewPasswordApi(payload);
+                if (response && (response.success === true)) {
+                    return response;
+                } else {
+                    throw new Error('Failed to save benefeciary');
+                }
+            } catch (error) {
+                console.error(error);
+                throw error;
+            } finally {
+                this.error = null;
+            }
+        },
+
+        async checkEmailStore(payload) {
+            this.error = null;
+            try {
+                if (!BENEFECIARY_API || typeof BENEFECIARY_API.checkEmailApi !== 'function') {
+                    throw new Error('BENEFECIARY_API service is not properly initialized');
+                }
+                const response = await BENEFECIARY_API.checkEmailApi(payload);
+                if (response && (response.success === true)) {
+                    return response;
+                } else {
+                    throw new Error('Failed to save benefeciary');
+                }
+            } catch (error) {
+                console.error(error);
+                throw error;
+            } finally {
+                this.error = null;
+            }
+        },
+
+        async sendPasscodeStore(payload) {
+            this.error = null;
+            try {
+                if (!BENEFECIARY_API || typeof BENEFECIARY_API.sendPasscodeApi !== 'function') {
+                    throw new Error('BENEFECIARY_API service is not properly initialized');
+                }
+                const response = await BENEFECIARY_API.sendPasscodeApi(payload);
+                if (response && (response.success === true)) {
+                    return response;
+                } else {
+                    throw new Error('Failed to save benefeciary');
+                }
+            } catch (error) {
+                console.error(error);
+                throw error;
+            } finally {
+                this.error = null;
+            }
+        },
+
         async sendPinCodeStore(benefeciaryData) {
             this.error = null;
             try {

@@ -5,27 +5,30 @@
                 <div class="d-flex justify-center">
                     <img :src="logo" loading="lazy" width="50" alt="Logo" />
                 </div>
-                <v-form @submit.prevent="checkExistingEmail" class="pa-4">
-                    <h5 class="text-center mb-3">Submit your email to continue changing your password</h5>
-                    <span class="text-white">Email</span>
-                    <v-text-field v-model="email" 
-                        :rules="[requiredRule, emailFormatRule]"
+                <v-form @submit.prevent="saveNewPassword" class="pa-4">
+                    <h5 class="text-center mb-3">Submit your new password to continue</h5>
+                    <span class="text-white">Password</span>
+                    <v-text-field v-model="password" 
+                        :rules="[requiredRule]"
                         placeholder="Type here..."
                         class="text-info"
-                        prepend-inner-icon="mdi-email-outline"
+                        prepend-inner-icon="mdi-lock"
                         variant="outlined"
                         density="compact"
-                        autocomplete="email" />
+                        autocomplete="password"
+                        :type="showPassword ? 'text' : 'password'"
+                        :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'" 
+                        @click:append-inner="showPassword = !showPassword" />
 
                     <v-btn :disabled="!isFormValid" 
-                        @click="checkExistingEmail"
+                        @click="saveNewPassword"
                         color="#004fb6" 
                         size="large" 
                         class="proceed-btn" 
                         height="45" 
                         block 
                         rounded>
-                        Submit email
+                        Change password
                     </v-btn>
                     <div class="to-login">
                         <p class="text-white">Has already an account? 
@@ -50,10 +53,20 @@ import Alert from '@/components/Alert.vue';
 
 
 export default {
-    name: 'ForgotPassword',
+    name: 'NewPassword',
+
+    data() {
+        return {
+            logo: require('@/assets/DSWD-logo.png'),
+            password: '',
+            showPassword: false,
+        };
+    },
+
     components: {
         Alert,
     },
+
     setup() {
         const loadingStore = useLoadingStore();
         const authStore = useAuthStore();
@@ -64,16 +77,10 @@ export default {
             benefeciaryStore,
         };
     },
-    data() {
-        return {
-            logo: require('@/assets/DSWD-logo.png'),
-            email: '',
-        };
-    },
 
     computed: {
         isFormValid() {
-            return (this.email);
+            return (this.password);
         },
 
     },
@@ -82,20 +89,20 @@ export default {
             return !!v || 'This field is required';
         },
 
-        emailFormatRule(v) {
-            const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return pattern.test(v) || 'Invalid email format';
-        },
-
-        async checkExistingEmail() {
+        async saveNewPassword() {
             this.loadingStore.show("Saving...")
             try {
+                const pincode = history.state.pincode;
                 const payload = {
-                    email: this.email,
+                    pincode: pincode,
+                    password: this.password,
                 };
-                const response = await this.benefeciaryStore.checkExistingEmailStore(payload);
+                const response = await this.benefeciaryStore.saveNewPasswordStore(payload);
                 if (response.success === true) {
-                    this.$router.push('/verify-pincode');
+                    this.$router.push({
+                        path: '/success',
+                        state: { successText: response.message }
+                    });
                 }
             } catch (error) {
                 console.error(error, 'error');

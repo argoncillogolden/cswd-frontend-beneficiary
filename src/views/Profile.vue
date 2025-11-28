@@ -82,6 +82,7 @@
                         <span class="text-grey">Email: </span>
                         <span>{{ this.email }}</span>
                     </div>
+                    <p style="font-size: 12px;" @click="this.$router.push('change-email')">I want to change email</p>
                 </div>
             
                 <h3>Authorize Person</h3>
@@ -138,7 +139,7 @@ import Alert from '@/components/Alert.vue';
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
-    name: 'Settings',
+    name: 'Profile',
     components: {
         Alert,
     },

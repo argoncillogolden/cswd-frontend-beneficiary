@@ -181,11 +181,11 @@ export default {
   },
 
   computed: {
-    showSidebar() {
-      return this.$route.name !== 'LoginPage' && !this.isNotFoundPage;
-    },
+    // showSidebar() {
+    //   return this.$route.name !== 'LoginPage' && !this.isNotFoundPage;
+    // },
     showMenu() {
-      const allowedPaths = ['/digital-id', '/releasing', '/history', '/profile'];
+      const allowedPaths = ['/digital-id', '/releasing', '/history', '/profile',];
       return allowedPaths.includes(this.$route.path);
     },
   },

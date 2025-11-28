@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div class="login-bg">
         <div>
@@ -5,27 +6,30 @@
                 <div class="d-flex justify-center">
                     <img :src="logo" loading="lazy" width="50" alt="Logo" />
                 </div>
-                <v-form @submit.prevent="checkExistingEmail" class="pa-4">
-                    <h5 class="text-center mb-3">Submit your email to continue changing your password</h5>
-                    <span class="text-white">Email</span>
-                    <v-text-field v-model="email" 
-                        :rules="[requiredRule, emailFormatRule]"
+                <v-form @submit.prevent="sendPincode" class="pa-4">
+                    <h5 class="text-center mb-3">To continue, we have sent a pincode to your email. Kindly check and fill-out the given field below</h5>
+                    <span class="text-white">Pincode</span>
+                    <v-text-field v-model="pincode" 
+                        :rules="[requiredRule]"
                         placeholder="Type here..."
                         class="text-info"
-                        prepend-inner-icon="mdi-email-outline"
+                        prepend-inner-icon="mdi-lock"
                         variant="outlined"
                         density="compact"
-                        autocomplete="email" />
+                        autocomplete="pincode" 
+                        :type="showPassword ? 'text' : 'password'"
+                        :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'" 
+                        @click:append-inner="showPassword = !showPassword"/>
 
                     <v-btn :disabled="!isFormValid" 
-                        @click="checkExistingEmail"
+                        @click="sendPincode"
                         color="#004fb6" 
                         size="large" 
                         class="proceed-btn" 
                         height="45" 
                         block 
                         rounded>
-                        Submit email
+                        Submit pincode
                     </v-btn>
                     <div class="to-login">
                         <p class="text-white">Has already an account? 
@@ -43,59 +47,78 @@
 </template>
 
 <script>
-import { useLoadingStore } from '@/stores/loading';
+import { useTheme } from 'vuetify';
+import { ref, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { useLoadingStore } from '@/stores/loading';
 import { useBenefeciaryStore } from '@/stores/benefeciaryStore';
 import Alert from '@/components/Alert.vue';
 
-
 export default {
-    name: 'ForgotPassword',
+    // eslint-disable-next-line vue/multi-word-component-names
+    name: 'VerifyPincode',
     components: {
         Alert,
     },
-    setup() {
-        const loadingStore = useLoadingStore();
-        const authStore = useAuthStore();
-        const benefeciaryStore = useBenefeciaryStore();
-        return {
-            loadingStore,
-            authStore,
-            benefeciaryStore,
-        };
-    },
     data() {
         return {
+            pincode: '',
+            showPassword: false,
             logo: require('@/assets/DSWD-logo.png'),
-            email: '',
+        }
+    },
+
+    setup() {
+        const authStore = useAuthStore();
+        const loadingStore = useLoadingStore();
+        const benefeciaryStore = useBenefeciaryStore();
+        const theme = useTheme();
+        const themeDialog = ref(false);
+        const selectedTheme = ref(theme.global.name.value);
+        const currentThemeName = computed(() => {
+            return theme.global.name.value === 'dark' ? 'Dark' : 'Light';
+        });
+        const applyTheme = () => {
+            theme.global.name.value = selectedTheme.value;
+            localStorage.setItem('theme', selectedTheme.value);
+            themeDialog.value = false;
+        };
+        return {
+            authStore,
+            loadingStore,
+            benefeciaryStore,
+            theme,
+            themeDialog,
+            selectedTheme,
+            currentThemeName,
+            applyTheme,
         };
     },
 
     computed: {
         isFormValid() {
-            return (this.email);
+            return (this.pincode);
         },
-
     },
+
     methods: {
+
         requiredRule(v) {
             return !!v || 'This field is required';
         },
 
-        emailFormatRule(v) {
-            const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return pattern.test(v) || 'Invalid email format';
-        },
-
-        async checkExistingEmail() {
+        async sendPincode() {
             this.loadingStore.show("Saving...")
             try {
                 const payload = {
-                    email: this.email,
+                    pincode: this.pincode,
                 };
-                const response = await this.benefeciaryStore.checkExistingEmailStore(payload);
+                const response = await this.benefeciaryStore.sendPincodeStore(payload);
                 if (response.success === true) {
-                    this.$router.push('/verify-pincode');
+                    this.$router.push({
+                        path: '/new-password',
+                        state: { pincode: this.pincode }
+                    });
                 }
             } catch (error) {
                 console.error(error, 'error');
@@ -109,7 +132,8 @@ export default {
         showAlert(message) {
             this.$refs.alertRef.showSnackbarAlert(message, "error");
         },
-    }
+
+    },
 };
 </script>
 

@@ -42,8 +42,8 @@ export const useAuthStore = defineStore('auth', () => {
         error.value = null;
         beneficiaryId.value = null;
 
-        localStorage.removeItem('auth_token', token.value);
-        localStorage.removeItem('beneficiary_id', beneficiaryId.value);
+        // localStorage.removeItem('auth_token', token.value);
+        // localStorage.removeItem('beneficiary_id', beneficiaryId.value);
         localStorage.clear();
         try {
             if (currentToken) {

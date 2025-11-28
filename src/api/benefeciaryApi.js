@@ -3,7 +3,11 @@ import apiClient from '../axios';
 export const BENEFECIARY_API = {
     ENDPOINTS: {
         SAVE_NEW_BENEFECIARY: '/benefeciary/save-new-benefeciary',
+        CHECK_EXISTING_EMAIL: '/benefeciary/check-existing-email',
         SEND_PINCODE: '/benefeciary/send-pincode',
+        SAVE_NEW_PASSWORD: '/benefeciary/save-new-password',
+        CHECK_EMAIL: '/benefeciary/check-email',
+        SEND_PASSCODE: '/benefeciary/send-passcode',
         FETCH_BENEF_IMAGE: '/benefeciary/benefeciary-image',
         FETCH_BENEF_AUTH_PERSON_IMAGE: '/benefeciary/benefeciary-auth-person-image',
         FETCH_RELEASING_CASH: '/benefeciary/releasing-cash',
@@ -52,28 +56,166 @@ export const BENEFECIARY_API = {
         }
     },
 
-    async sendPinCodeApi(benefeciaryData) {
+    async checkExistingEmailApi(payload) {
         try {
             const config = {
                 headers: {
-                    "Content-Type": "multipart/form-data",
-                },
+                    'Content-Type': 'application/json'
+                }
             };
+            // Post request for submission
             const response = await apiClient.post(
-                this.ENDPOINTS.SEND_PINCODE,
-                benefeciaryData,
+                this.ENDPOINTS.CHECK_EXISTING_EMAIL, 
+                payload,
                 config
             );
+
             if (!response.data) {
-                throw new Error("Invalid response from server");
+                throw new Error('Invalid response from server');
             }
             return response.data;
         } catch (error) {
-            console.error("[BENEFECIARY_API] Error saving benefeciary:", error);
+            console.error('[BENEFECIARY_API] Error saving benefeciary:', error);
             const enhancedError = new Error(
                 error.response?.data?.message ||
                 error.message ||
-                "Failed to save benefeciary"
+                'Failed to save benefeciary'
+            );
+            enhancedError.response = error.response;
+            enhancedError.status = error.response?.status;
+            throw enhancedError;
+        }
+    },
+
+    async sendPincodeApi(payload) {
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            // Post request for submission
+            const response = await apiClient.post(
+                this.ENDPOINTS.SEND_PINCODE, 
+                payload,
+                config
+            );
+
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[BENEFECIARY_API] Error saving benefeciary:', error);
+            const enhancedError = new Error(
+                error.response?.data?.message ||
+                error.message ||
+                'Failed to save benefeciary'
+            );
+            enhancedError.response = error.response;
+            enhancedError.status = error.response?.status;
+            throw enhancedError;
+        }
+    },
+
+    async saveNewPasswordApi(payload) {
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            // Post request for submission
+            const response = await apiClient.post(
+                this.ENDPOINTS.SAVE_NEW_PASSWORD, 
+                payload,
+                config
+            );
+
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[BENEFECIARY_API] Error saving benefeciary:', error);
+            const enhancedError = new Error(
+                error.response?.data?.message ||
+                error.message ||
+                'Failed to save benefeciary'
+            );
+            enhancedError.response = error.response;
+            enhancedError.status = error.response?.status;
+            throw enhancedError;
+        }
+    },
+
+    async checkEmailApi(payload) {
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+            const beneficiary_id = localStorage.getItem('beneficiary_id');
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+            // Post request for submission
+            const response = await apiClient.post(
+                `${this.ENDPOINTS.CHECK_EMAIL}/${beneficiary_id}`, 
+                payload,
+                config
+            );
+
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[BENEFECIARY_API] Error saving benefeciary:', error);
+            const enhancedError = new Error(
+                error.response?.data?.message ||
+                error.message ||
+                'Failed to save benefeciary'
+            );
+            enhancedError.response = error.response;
+            enhancedError.status = error.response?.status;
+            throw enhancedError;
+        }
+    },
+
+    async sendPasscodeApi(payload) {
+        try {
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+            const beneficiary_id = localStorage.getItem('beneficiary_id');
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+            // Post request for submission
+            const response = await apiClient.post(
+                `${this.ENDPOINTS.SEND_PASSCODE}/${beneficiary_id}`, 
+                payload,
+                config
+            );
+
+            if (!response.data) {
+                throw new Error('Invalid response from server');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('[BENEFECIARY_API] Error saving benefeciary:', error);
+            const enhancedError = new Error(
+                error.response?.data?.message ||
+                error.message ||
+                'Failed to save benefeciary'
             );
             enhancedError.response = error.response;
             enhancedError.status = error.response?.status;

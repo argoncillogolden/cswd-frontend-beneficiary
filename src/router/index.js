@@ -7,6 +7,11 @@ import DigitalID from '@/views/DigitalID.vue';
 import History from '@/views/History.vue';
 import Releasing from '@/views/Releasing.vue';
 import Profile from '@/views/Profile.vue';
+import VerifyPincode from '@/views/VerifyPincode.vue';
+import NewPassword from '@/views/NewPassword.vue';
+import ChangeEmail from '@/views/ChangeEmail.vue';
+import VerifyPasscode from '@/views/VerifyPasscode.vue';
+import Success from '@/views/Success.vue';
 import { useAuthStore } from '@/stores/auth';
 
 const routes = [
@@ -18,6 +23,11 @@ const routes = [
     { path: '/history', name: 'History', component: History, meta: { requiresAuth: true } },
     { path: '/releasing', name: 'Releasing', component: Releasing, meta: { requiresAuth: true } },
     { path: '/profile', name: 'Profile', component: Profile, meta: { requiresAuth: true } },
+    { path: '/verify-pincode', name: 'VerifyPincode', component: VerifyPincode },
+    { path: '/new-password', name: 'NewPassword', component: NewPassword },
+    { path: '/success', name: 'Success', component: Success },
+    { path: '/change-email', name: 'ChangeEmail', component: ChangeEmail, meta: { requiresAuth: true } },
+    { path: '/verify-passcode', name: 'VerifyPasscode', component: VerifyPasscode, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({
